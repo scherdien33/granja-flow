@@ -24,6 +24,7 @@ export interface Pedido {
   dataVencimento: string;
   formaPagamento: FormaPagamento | "";
   dataPagamento: string;
+  anotacoesGenisson?: string;
 }
 
 const STORAGE_KEY = "pedidos";
@@ -59,6 +60,7 @@ export function addPedido(pedido: Omit<Pedido, "id" | "dataCriacao" | "status" |
     dataVencimento: "",
     formaPagamento: "",
     dataPagamento: "",
+    anotacoesGenisson: "",
     ...pedido,
   };
   const pedidos = getPedidos();
