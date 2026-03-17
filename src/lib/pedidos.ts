@@ -78,6 +78,43 @@ export function updatePedido(id: string, updates: Partial<Pedido>) {
   }
 }
 
+const SAIDAS_KEY = "saidas_estoque";
+
+export interface SaidaEstoque {
+  id: string;
+  pedidoId: string;
+  descricao: string;
+  quantidade: number;
+  pessoa: string;
+  centroDeCusto: string;
+  dataSaida: string;
+}
+
+export function getSaidas(): SaidaEstoque[] {
+  try {
+    const data = localStorage.getItem(SAIDAS_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveSaidas(saidas: SaidaEstoque[]) {
+  localStorage.setItem(SAIDAS_KEY, JSON.stringify(saidas));
+}
+
+export function addSaida(saida: Omit<SaidaEstoque, "id" | "dataSaida">): SaidaEstoque {
+  const nova: SaidaEstoque = {
+    id: crypto.randomUUID(),
+    dataSaida: new Date().toISOString(),
+    ...saida,
+  };
+  const saidas = getSaidas();
+  saidas.unshift(nova);
+  saveSaidas(saidas);
+  return nova;
+}
+
 export const STATUS_ORDER: Status[] = [
   "Aguardando orçamento",
   "Comprado",
