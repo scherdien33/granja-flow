@@ -115,6 +115,39 @@ export function addSaida(saida: Omit<SaidaEstoque, "id" | "dataSaida">): SaidaEs
   return nova;
 }
 
+const CENTROS_KEY = "centros_custo";
+
+export interface CentroCusto {
+  id: string;
+  nome: string;
+}
+
+export function getCentrosCusto(): CentroCusto[] {
+  try {
+    const data = localStorage.getItem(CENTROS_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveCentrosCusto(centros: CentroCusto[]) {
+  localStorage.setItem(CENTROS_KEY, JSON.stringify(centros));
+}
+
+export function addCentroCusto(nome: string): CentroCusto {
+  const novo: CentroCusto = { id: crypto.randomUUID(), nome: nome.trim() };
+  const centros = getCentrosCusto();
+  centros.push(novo);
+  saveCentrosCusto(centros);
+  return novo;
+}
+
+export function removeCentroCusto(id: string) {
+  const centros = getCentrosCusto().filter((c) => c.id !== id);
+  saveCentrosCusto(centros);
+}
+
 export const STATUS_ORDER: Status[] = [
   "Aguardando orçamento",
   "Comprado",
