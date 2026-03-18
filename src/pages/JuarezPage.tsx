@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { addPedido, getPedidos, formatDate, type Urgencia } from "@/lib/pedidos";
+import { addPedido, getPedidos, getCentrosCusto, formatDate, type Urgencia } from "@/lib/pedidos";
 
 export default function JuarezPage() {
   const [descricao, setDescricao] = useState("");
@@ -15,6 +15,7 @@ export default function JuarezPage() {
   const [urgencia, setUrgencia] = useState<Urgencia>("Normal");
   const [observacao, setObservacao] = useState("");
   const [pedidos, setPedidos] = useState(getPedidos);
+  const [centros] = useState(getCentrosCusto);
   const [key, setKey] = useState(0);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -45,7 +46,23 @@ export default function JuarezPage() {
             </div>
             <div>
               <Label htmlFor="maq">Máquina / Equipamento *</Label>
-              <Input id="maq" value={maquina} onChange={(e) => setMaquina(e.target.value)} required placeholder="Ex: Trator MF 275" />
+              <select
+                id="maq"
+                value={maquina}
+                onChange={(e) => setMaquina(e.target.value)}
+                required
+                className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+              >
+                <option value="">Selecione...</option>
+                {centros.map((c) => (
+                  <option key={c.id} value={c.nome}>{c.nome}</option>
+                ))}
+              </select>
+              {centros.length === 0 && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Cadastre centros de custo na página do Cristian antes de abrir um pedido.
+                </p>
+              )}
             </div>
             <div>
               <Label>Urgência</Label>

@@ -148,6 +148,17 @@ export function removeCentroCusto(id: string) {
   saveCentrosCusto(centros);
 }
 
+const SALDO_KEY = "saldo_inicial";
+
+export function getSaldoInicial(): number {
+  const data = localStorage.getItem(SALDO_KEY);
+  return data ? parseFloat(data) : 0;
+}
+
+export function setSaldoInicial(valor: number) {
+  localStorage.setItem(SALDO_KEY, valor.toString());
+}
+
 export const STATUS_ORDER: Status[] = [
   "Aguardando orçamento",
   "Comprado",

@@ -5,14 +5,16 @@ import { RecebimentoTab } from "./cristian/RecebimentoTab";
 import { EstoqueTab } from "./cristian/EstoqueTab";
 import { ConsultaTab } from "./cristian/ConsultaTab";
 import { CentrosCustoTab } from "./cristian/CentrosCustoTab";
+import { FinanceiroTab } from "./cristian/FinanceiroTab";
 
-type Tab = "recebimento" | "estoque" | "consulta" | "centros";
+type Tab = "recebimento" | "estoque" | "consulta" | "centros" | "financeiro";
 
 const tabs: { key: Tab; label: string }[] = [
   { key: "recebimento", label: "Recebimento" },
   { key: "estoque", label: "Estoque" },
   { key: "consulta", label: "Consulta" },
   { key: "centros", label: "Centros de Custo" },
+  { key: "financeiro", label: "Financeiro" },
 ];
 
 export default function CristianPage() {
@@ -57,6 +59,9 @@ export default function CristianPage() {
         )}
         {tab === "centros" && (
           <CentrosCustoTab centros={centros} onRefresh={refresh} />
+        )}
+        {tab === "financeiro" && (
+          <FinanceiroTab pedidos={pedidos} />
         )}
 
       </main>
