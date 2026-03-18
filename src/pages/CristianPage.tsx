@@ -53,7 +53,7 @@ export default function CristianPage() {
           <EstoqueTab pedidos={pedidos} saidas={saidas} centros={centros} onRefresh={refresh} />
         )}
         {tab === "consulta" && (
-          <ConsultaTab pedidos={pedidos} />
+          <ConsultaTab pedidos={pedidos} saidas={saidas} />
         )}
         {tab === "centros" && (
           <CentrosCustoTab centros={centros} onRefresh={refresh} />
