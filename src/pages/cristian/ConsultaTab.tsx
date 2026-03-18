@@ -2,18 +2,26 @@
 import { useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
 import { Input } from "@/components/ui/input";
-import { formatDate, type Pedido } from "@/lib/pedidos";
+import { formatDate, type Pedido, type SaidaEstoque } from "@/lib/pedidos";
 
 interface Props {
   pedidos: Pedido[];
+  saidas: SaidaEstoque[];
 }
 
-export function ConsultaTab({ pedidos }: Props) {
+export function ConsultaTab({ pedidos, saidas }: Props) {
   const [busca, setBusca] = useState("");
 
   const recebidos = pedidos.filter(
     (p) => p.status === "Recebido no estoque" || p.status === "Pago"
   );
+
+  const qtdDisponivel = (pedidoId: string, recebida: number) => {
+    const totalSaidas = saidas
+      .filter((s) => s.pedidoId === pedidoId)
+      .reduce((acc, s) => acc + s.quantidade, 0);
+    return Math.max(0, recebida - totalSaidas);
+  };
 
   const termo = busca.toLowerCase().trim();
   const filtrados = termo
@@ -54,7 +62,7 @@ export function ConsultaTab({ pedidos }: Props) {
                   <td className="px-3 py-2 font-medium">{p.descricao}</td>
                   <td className="px-3 py-2 text-muted-foreground">{p.maquina}</td>
                   <td className="px-3 py-2 text-muted-foreground">{p.fornecedor || "—"}</td>
-                  <td className="px-3 py-2 text-right">{p.quantidadeRecebida}</td>
+                  <td className="px-3 py-2 text-right">{qtdDisponivel(p.id, p.quantidadeRecebida)}</td>
                   <td className="px-3 py-2">
                     <span className={p.condicao === "Com avaria" ? "text-destructive" : "text-emerald-600"}>
                       {p.condicao || "—"}

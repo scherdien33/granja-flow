@@ -26,6 +26,14 @@ export function EstoqueTab({ pedidos, saidas, centros, onRefresh }: Props) {
     (p) => p.status === "Recebido no estoque" || p.status === "Pago"
   );
 
+  // Quantidade disponível = recebida menos total de saídas registradas
+  const qtdDisponivel = (pedidoId: string, recebida: number) => {
+    const totalSaidas = saidas
+      .filter((s) => s.pedidoId === pedidoId)
+      .reduce((acc, s) => acc + s.quantidade, 0);
+    return Math.max(0, recebida - totalSaidas);
+  };
+
   const handleSaida = () => {
     if (!saidaPedidoId || !saidaQtd || !saidaPessoa || !saidaCentro) return;
     const pedido = pedidos.find((p) => p.id === saidaPedidoId);
@@ -57,7 +65,7 @@ export function EstoqueTab({ pedidos, saidas, centros, onRefresh }: Props) {
                 <p className="font-medium">{p.descricao}</p>
                 <p className="text-sm text-muted-foreground">{p.maquina} · {p.fornecedor}</p>
                 <p className="text-sm text-muted-foreground">
-                  Qtd: {p.quantidadeRecebida} · {p.condicao} · {formatDate(p.dataRecebimento)}
+                  Qtd disponível: {qtdDisponivel(p.id, p.quantidadeRecebida)} · {p.condicao} · {formatDate(p.dataRecebimento)}
                 </p>
               </div>
             ))}
